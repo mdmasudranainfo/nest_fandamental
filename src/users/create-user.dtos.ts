@@ -6,6 +6,7 @@ import {
   IsInt,
   Min,
   Max,
+  IsNotEmpty,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -23,6 +24,7 @@ export class CreateUserDto {
   @IsOptional() // ✅ This exists in 0.3.2
   gender?: string;
 
+  @IsNotEmpty({ message: 'Age is required' })
   @IsInt({ message: 'Age must be an integer number' })
   @Min(1, { message: 'Age must be at least 1' })
   @Max(120, { message: 'Age must not be more than 120' })
@@ -30,4 +32,8 @@ export class CreateUserDto {
 
   @IsEmail({}, { message: 'Email must be a valid email address' })
   email: string;
+
+  @IsString({ message: 'City must be a string' })
+  @IsNotEmpty({ message: 'City is required' })
+  city: string;
 }

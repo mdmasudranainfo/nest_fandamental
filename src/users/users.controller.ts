@@ -7,7 +7,6 @@ import {
   ParseIntPipe,
   Post,
   Query,
-  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './create-user.dtos';
@@ -58,16 +57,34 @@ export class UsersController {
   getUserByIdDemo(@Param() params: { id: string; gender: string }) {
     return `User with ID ${params.id} and Gender ${params.gender}`;
   }
+
+  // create user request sended from client validation using DTO and class-validator
+  // @Post()
+  // createUser(
+  //   @Body(new ValidationPipe())
+  //   body: CreateUserDto
+  // ) {
+  //   const user = {
+  //     name: body.name,
+  //     age: body.age,
+  //     email: body.email,
+  //   };
+  //   this.usersService.createUser(user);
+  //   console.log(user);
+  //   return { message: 'User created' };
+  // }
+
+  //
+
+  //
+
+  // validation pipe global level / main.ts
   @Post()
   createUser(
-    @Body(new ValidationPipe())
+    @Body()
     body: CreateUserDto
   ) {
-    const user = {
-      name: body.name,
-      age: body.age,
-      email: body.email,
-    };
+    const user = body;
     this.usersService.createUser(user);
     console.log(user);
     return { message: 'User created' };
