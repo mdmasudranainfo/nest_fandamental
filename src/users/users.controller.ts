@@ -13,80 +13,34 @@ import { CreateUserDto } from './create-user.dtos';
 
 @Controller('users')
 export class UsersController {
-  usersService = new UsersService();
+  constructor(private readonly usersService: UsersService) {}
 
-  // query request sended from client
-  // @Get()
-  // getUsers(@Query() query: { age?: string; name?: string }) {
-  //   console.log(query);
-
-  //   const result = this.usersService.getUsers();
-  //   return {
-  //     result,
-  //     query,
-  //   };
-  // }
-
-  //
-
-  //
-
-  // use pipes
+  // Pagination example using query params
   @Get()
-  getUsers(
+  async getUsers(
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number
   ) {
-    console.log({ limit, page });
-
-    const result = this.usersService.getUsers();
+    const users = await this.usersService.getUsers(limit, page);
     return {
-      result,
-      limit,
+      success: true,
       page,
+      limit,
+      data: users,
     };
   }
 
-  // params request sended from client
+  // Get single user by ID
   @Get(':id')
-  getUserById(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.getUserById(id);
-  }
-  // multiple params request sended from client
-  @Get(':id/:gender')
-  getUserByIdDemo(@Param() params: { id: string; gender: string }) {
-    return `User with ID ${params.id} and Gender ${params.gender}`;
+  async getUserById(@Param('id') id: string) {
+    const user = await this.usersService.getUserById(id);
+    return { success: true, data: user };
   }
 
-  // create user request sended from client validation using DTO and class-validator
-  // @Post()
-  // createUser(
-  //   @Body(new ValidationPipe())
-  //   body: CreateUserDto
-  // ) {
-  //   const user = {
-  //     name: body.name,
-  //     age: body.age,
-  //     email: body.email,
-  //   };
-  //   this.usersService.createUser(user);
-  //   console.log(user);
-  //   return { message: 'User created' };
-  // }
-
-  //
-
-  //
-
-  // validation pipe global level / main.ts
+  // Create a new user
   @Post()
-  createUser(
-    @Body()
-    body: CreateUserDto
-  ) {
-    const user = body;
-    this.usersService.createUser(user);
-    console.log(user);
-    return { message: 'User created' };
+  async createUser(@Body() body: CreateUserDto) {
+    const user = await this.usersService.createUser(body);
+    return { success: true, message: 'User created successfully', data: user };
   }
 }

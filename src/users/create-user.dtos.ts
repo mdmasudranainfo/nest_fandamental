@@ -10,10 +10,6 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto {
-  @IsInt({ message: 'ID must be an integer number' })
-  @Min(1, { message: 'ID must be greater than 0' })
-  id: number;
-
   @IsString({ message: 'Name must be a string' })
   @MinLength(3, {
     message: 'Name is too short. Minimum length is $constraint1 characters',
